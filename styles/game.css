@@ -1,0 +1,242 @@
+:root {
+    --player-1: #E5A77A;
+    --player-2: #E560A2;
+}
+
+.wrapper {
+    max-width: 100%;
+    max-height: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 2vw;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    box-sizing: border-box;
+    gap: 1.5vw;
+    border-top-left-radius: 6vw;
+    border-top-right-radius: 6vw;
+    bottom: 0;
+    position: absolute;
+    border: 3vw solid #a7a7a7;
+    border-bottom: 5vw solid #a7a7a7;
+    box-shadow: 0 0 10vw 3vw #00000060, 0 1vw 2vw #00000060, inset 0 0.5vw 0 0.5vw #727272, inset 0 0.5vw 3vw #000000, inset 0 -2vw 3vw -2vw #787878;
+    animation: slideInBottom 2s;
+}
+
+@keyframes slideInBottom {
+    0% { bottom: -200vh;}
+    100% { bottom: 0; }
+}
+
+.gameField {
+    display: flex;
+    flex-direction: row;
+    height: min-content;
+    width: 100%;;
+}
+
+.row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 2vw;
+    transition: box-shadow 0.5s;
+}
+
+.row:hover {
+    box-shadow: 0 0 0.5vw #303030;
+    cursor: pointer;
+}
+
+.row:hover .rowSelector {
+    opacity: 1;
+}
+
+.selectable {
+    cursor: pointer;
+    width: 9vh;
+    aspect-ratio: 1/1;
+    outline: none;
+    border: none;
+    border-radius: 100vw;
+    margin: 0.5vw;
+    background-color: #d4d4d4;
+    box-shadow: 0 -0.3cqmin 0 0.1vw #00000070, inset 0 0 1.5vw #00000060;
+    transition: background-color 0.2s;
+}
+
+.selectable:hover {
+    background-color: var(--player-1);
+}
+
+.rowSelector {
+    top: -3.5vw;
+    color: #fff;
+    font-size: 4vw;
+    position: absolute;
+    align-self: center;
+    text-shadow: 0 0 1vw #00000080;
+    --fa-bounce-jump-scale-x: 0.8; 
+    --fa-bounce-jump-scale-y: 0.8;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.player-wrapper {
+    position: absolute;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 15vw;
+    z-index: 100;
+    box-shadow: inset 0 -2.2vw 1vw -2vw #00000080, inset 0 -1vw #a7a7a7, 0 1vw 2vw #00000070, inset 0 -1vw 1vw #00000060;
+}
+
+#player-1-wrapper {
+    left: 0;
+    border-top-right-radius: 2vw;
+    border-bottom-right-radius: 2vw;
+    animation: slideInLeft 2s;
+}
+
+#player-2-wrapper {
+    right: 0;
+    border-top-left-radius: 2vw;
+    border-bottom-left-radius: 2vw;
+    animation: slideInRight 2s;
+}
+
+@keyframes slideInRight {
+    0% { right: -200vw;}
+    100% { right: 0; }
+}
+
+@keyframes slideInLeft {
+    0% { left: -200vw;}
+    100% { left: 0; }
+}
+
+.player-Bubble {
+    margin: 1vw;
+    margin-top: 3vw;
+    aspect-ratio: 1/1;
+    border-radius: 100vw;
+    width: 80%;
+    background-color: #E560A2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-Bubble h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 2vw;
+    max-width: 87%;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+.fa-hand-holding {
+    color: #a7a7a7;
+    font-size: 5vw;
+    padding-bottom: 5vw;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+}
+
+#User-1-Bubble {
+    background-color: var(--player-1);
+}
+
+#User-2-Bubble {
+    background-color: var(--player-2);
+}
+
+@media only screen and (max-width: 800px) {
+    .selectable {
+        width: 5vw;
+    }
+
+    .wrapper {
+        scale: 1.87;
+        bottom: 20vw;
+    }
+
+    .player-wrapper {
+        left: auto;
+        right: auto;
+        top: 4vw;
+        height: 35vh;
+        width: 40%;
+        box-sizing: border-box;
+        padding-top: 5vw;
+    }
+
+    #background {
+        bottom: 70vw;
+    }
+
+    #player-1-wrapper {
+        left: 6vw;
+        border-radius: 2vw;
+    }
+
+    #player-2-wrapper {
+        right: 6vw;
+        border-radius: 2vw;
+    }
+    
+    .fa-hand-holding {
+        font-size: 12vw;
+    }
+    
+    .player-Bubble h1 {
+        font-size: 5.5vw;
+    }
+}
+
+@media (pointer:none), (pointer:coarse) {
+    .selectable {
+        width: 5vw;
+    }
+
+    .wrapper {
+        scale: 1.87;
+        bottom: 20vw;
+    }
+
+    .player-wrapper {
+        left: auto;
+        right: auto;
+        top: 4vw;
+        height: 35vh;
+        width: 40%;
+        box-sizing: border-box;
+        padding-top: 5vw;
+    }
+
+    #background {
+        bottom: 70vw;
+    }
+
+    #player-1-wrapper {
+        left: 6vw;
+        border-radius: 2vw;
+    }
+
+    #player-2-wrapper {
+        right: 6vw;
+        border-radius: 2vw;
+    }
+    
+    .fa-hand-holding {
+        font-size: 12vw;
+    }
+    
+    .player-Bubble h1 {
+        font-size: 5.5vw;
+    }
+}
