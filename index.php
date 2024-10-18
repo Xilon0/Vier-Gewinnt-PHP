@@ -22,7 +22,7 @@
 
         <form id="form">
             <p id="title" onclick="joinGame('123456')">VIER GEWINNT</p>
-            <input type="text" id="name" name="name" placeholder="Name" required>
+            <input type="text" id="username" name="username" placeholder="Name" required>
             <button type="submit">Beitreten</button>
         </form>
             
@@ -38,7 +38,7 @@
                 body: formData
             });
             
-            const result = await response.text();
+            const result = await response.json();
             
             if (result.gameID) {
                 joinGame(result.gameID);

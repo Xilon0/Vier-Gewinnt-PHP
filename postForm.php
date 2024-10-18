@@ -29,7 +29,7 @@ sqlQuery("select * from games", "gameID", $conn);
 
 
 session_start();
-$session_id = session_id();
+$session_Id = session_id();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,20 +39,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usernameFrontend = $_POST['username'];
 
     // gameid = primary key von der datenbank
-    $gameid = sqlQuery("select * from games", "gameid", $conn);
+    $gameID = sqlQuery("select * from games", "gameID", $conn);
 
     // BENUTZERNAME wird PER GET REQUEST ÜBERGEBEN und dann in die db geschrieben
     // rückgabe der gameid wenn ein spieler definiert ist, wenn volll dann false zurückgeben
 
-    $playerdata = sqlQuery("select player1 from games where gameID = $gameid", "player1", $conn);
+    $playerdata = sqlQuery("select player1 from games where gameID = $gameID", "player1", $conn);
 
     // if player1 == 0 -> spieler 1 wurde noch nicht gesetzt
     if($playerdata == "0") {
-        $sql = "update games set player1 = $sessionId, set username1 = $usernameFrontend where gameID = $gameid";
+        $sql = "update games set player1 = '$session_Id', username1 = '$usernameFrontend' where gameID = $gameID";
         $conn->query($sql);
 
         $response = [
-            'message' => $gameid
+            'gameID' => $gameID
         ];
     
         // Set the content type to application/json
@@ -62,16 +62,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode($response);
 
     } else { // sonst wird in db player2 geschaut ob dieser frei ist 
-        $result = $conn->query("select player2 from games where gameID = $gameid"); 
+        $result = $conn->query("select player2 from games where gameID = $gameID"); 
         $row = $result->fetch_assoc();
         $playerdata = $row['player2'];
         if($playerdata == "0") {
-        $sql = "update games set player2 = $sessionId, username2 = $usernameFrontend where gameID = $gameid";
-        $conn->query($sql);
+        $sql = "update games set player2 = $session_Id, username2 = $usernameFrontend where gameID = $gameID";
+        if (!$conn->query($sql)) {
+            // Log the error and return a JSON error response
+            error_log("SQL Error: " . $conn->error);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Database error']);
+            exit;
+        }
         } else { // falls dieser nicht frei ist, ist das game voll.
            
             $response = [
-                'message' => 'full'
+                'gameID' => 'full'
             ];
         
             // Set the content type to application/json
