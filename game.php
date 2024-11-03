@@ -1,6 +1,5 @@
 <?php
     session_start();
-
     if (!isset($_SESSION['username'])) {
         header('Location: index.php');
         exit();
@@ -24,7 +23,6 @@
     </head>
     <body>
         <img src="images/background.png" id="background">
-        <button onclick="simulateTurn(5,1);" style="position: absolute; top:0; left:0">simulateOpponantTurn</button> <!--Debug Button | REMOVE LATER-->
         <div class="wrapper">
             <div class="gameField" id="gameField"></div>
         </div>
@@ -33,6 +31,7 @@
                 <h1 id="User-1-Name"></h1>
             </div>
             <i class="fa-solid fa-hand-holding" id="turnIcon-1"></i>
+            <i class="fa-solid fa-arrow-right-from-bracket" id="exitIcon" onclick="exitRound()"></i>
         </div>
         <div class="player-wrapper" id="player-2-wrapper">
             <div class="player-Bubble" id="User-2-Bubble">
@@ -43,65 +42,71 @@
 
         <script>
 
-            let fieldArray = new Array(7).fill().map(() => new Array(6).fill(2));;
+            let fieldArray;
             let playerOne;
             let playerTwo;
             let player;
+            let lastTurnPlayer;
+            let winnner = "none";
 
             initialize();
             
 
             function getDatabase() {
-
                 fieldArray;
                 playerOne = "Player 1";
                 playerTwo = "Player 2";
                 lastTurnPlayer = 1;
                 player = 0;
+                let usernameFromSession = "<?php echo $_SESSION['username'] ?>";
 
-                /*$.ajax({
+                $.ajax({
                     url: 'getDatabase.php',
                     type: 'GET',
-                    success: function(response) {
-                        // { "gameBoard": [[...]], "statusMessage": "Player 2's turn" }
-
-                        let data = JSON.parse(response);
-
+                    dataType: 'json', // Specify that you're expecting JSON
+                    success: function(data) { // Directly use the parsed JSON data
                         fieldArray = data.gameBoard;
                         playerOne = data.playerOne;
                         playerTwo = data.playerTwo;
                         lastTurnPlayer = data.lastTurnPlayer;
-                        if (playerOne == $_SESSION['username']) {
+                        winner = data.winner;
+                        
+                        if (usernameFromSession == playerOne) {
+                            document.getElementById("User-1-Name").textContent = playerOne;
+                            document.getElementById("User-2-Name").textContent = playerTwo;
+                        } else {
+                            document.getElementById("User-2-Name").textContent = playerOne;
+                            document.getElementById("User-1-Name").textContent = playerTwo;  
+                        }
+
+                        // Assuming $_SESSION['username'] is accessible via some JS variable
+                        if (playerOne === usernameFromSession) { // Use the actual variable holding session username
                             player = 0;
-                        } else if (playerTwo ==  $_SESSION['username']) {
+                        } else if (playerTwo === usernameFromSession) {
                             player = 1;
                         } else {
-                            window.location.href("index.php");
+                            window.location.href = "index.php"; // Correct way to redirect
+                        }
+
+                        if ( player == 1 ) {
+                            document.documentElement.style.setProperty('--player-1', getComputedStyle(document.body).getPropertyValue('--color-2'));
+                            document.documentElement.style.setProperty('--player-2', getComputedStyle(document.body).getPropertyValue('--color-1'));
                         }
 
                         update();
 
-                        setTimeout(getDatabase(), 1000);
+                        setTimeout(getDatabase, 2000); // Call the function, do not invoke it
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching data:', status, error);
-                        setTimeout(getDatabase(), 1000);
+                        setTimeout(getDatabase, 2000); // Call the function, do not invoke it
                     }
-                });*/
+                });
             }
             
             function initialize() {
 
                 getDatabase();
-
-                if ( player == 1 ) {
-                    const tempColor = getComputedStyle(document.body).getPropertyValue('--player-1');
-                    document.documentElement.style.setProperty('--player-1', getComputedStyle(document.body).getPropertyValue('--player-2'));
-                    document.documentElement.style.setProperty('--player-2', tempColor);
-                }
-
-                document.getElementById("User-1-Name").textContent = playerOne;
-                document.getElementById("User-2-Name").textContent = playerTwo;
 
                 const gameField = document.getElementById('gameField');
 
@@ -110,7 +115,7 @@
                     row.className = 'row';
                     row.id = `row-${i}`;
                     row.value = i;
-                    row.onclick = function() { selectRow(i); };
+                    row.onclick = function() { selectColumn(i); };
                     for (let j = 0; j < 6; j++) {
                         const button = document.createElement('button');
                         button.value = `${i}`;
@@ -146,14 +151,11 @@
             }
 
             function setField(i,j,p) {
-                if (player == 1) {
-                    p = 1 - p;
-                }
-                if (p == 0) {
-                    let color = getComputedStyle(document.body).getPropertyValue('--player-1');
+                if (p == 1) {
+                    let color = getComputedStyle(document.body).getPropertyValue('--color-1');
                     document.getElementById(`${i}|${j}`).style.backgroundColor = color;
-                } else {
-                    let color = getComputedStyle(document.body).getPropertyValue('--player-2');
+                } else if (p == 2) {
+                    let color = getComputedStyle(document.body).getPropertyValue('--color-2');
                     document.getElementById(`${i}|${j}`).style.backgroundColor = color;
                 }
             }
@@ -161,9 +163,8 @@
             function update() {
                 for (let i = 0; i < 7; i++) {
                     for (let j = 0; j < 6; j++) {
-                        if (fieldArray[i][j] != 2) {
-                            setField(i,j,fieldArray[i][j]);
-                        }
+                        if (fieldArray)
+                            setField(i,j,fieldArray[j][i]);
                     }
                 }
                 if (lastTurnPlayer == player) {
@@ -173,40 +174,26 @@
                 }
             }
 
-            function selectRow(row) {
-                fetch("push.php?row="+row);
-                //pushInput to php
-                simulateTurn(row,player); //debug
+            function selectColumn(column) {
+                simulateColumnPlacement(column);
+                fetch("push.php?column=" + column);
             }
 
-
-
-
-
-
-
-
-
-            function simulateTurn(i,p) { //DEBUG REMOVE LATER
-                //pushInput to php
+            function simulateColumnPlacement(i) {
                 let placed = false
-                for (let j = 0; j < 6; j++) {
-                    if (fieldArray[i][j] != 2) {
-                        fieldArray[i][j-1] = p;
+                for (let j = 5; j >= 0; j--) {
+                    if (fieldArray[j][i] == 0 || fieldArray[j][i] == null) {
+                        setField(i,j,player+1);
+                        lastTurnPlayer = 1 - lastTurnPlayer;
                         placed = true;
                         break;
                     }
                 }
-                if (!placed) {
-                    fieldArray[i][5] = p;
-                }
-
-                if (lastTurnPlayer == 0)
-                    lastTurnPlayer = 1
-                else 
-                    lastTurnPlayer = 0
-
                 update()
+            }
+
+            function exitRound() {
+                window.location.href = "exit.php"
             }
 
         </script>

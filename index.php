@@ -1,6 +1,12 @@
 <?php
-    if (session_status() === PHP_SESSION_ACTIVE) {
-        session_destroy();
+    session_start();
+    if (isset($_SESSION['username'])) {
+        if (isset($_SESSION['gameID'])) {
+            if ($_SESSION['gameID'] != null) {
+                $gameID = $_SESSION['gameID'];
+                header('Location: game.php?id='.$gameID);
+            }
+        }
     }
 ?>
 
@@ -21,7 +27,7 @@
         <img src="images/background.png" id="background">
 
         <form id="form">
-            <p id="title" onclick="joinGame('123456')">VIER GEWINNT</p>
+            <p id="title">VIER GEWINNT</p>
             <input type="text" id="username" name="username" placeholder="Name" required>
             <button type="submit">Beitreten</button>
         </form>
@@ -40,7 +46,7 @@
             
             const result = await response.json();
             
-            if (result.gameID) {
+            if (result.gameID != "full") {
                 joinGame(result.gameID);
             } else {
                 console.error('No gameID returned:', result);

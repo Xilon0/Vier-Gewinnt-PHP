@@ -49,4 +49,5 @@ function winner($field, $currentPlayer) {
     }
 
     return false;
+}
 ?>

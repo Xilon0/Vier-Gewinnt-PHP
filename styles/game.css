@@ -1,6 +1,8 @@
 :root {
     --player-1: #E5A77A;
     --player-2: #E560A2;
+    --color-1: #E5A77A;
+    --color-2: #E560A2;
 }
 
 .wrapper {
@@ -153,6 +155,20 @@
 
 #User-2-Bubble {
     background-color: var(--player-2);
+}
+
+#exitIcon {
+    position: absolute;
+    color: #d4d4d4;
+    cursor: pointer;
+    left: 2vw;
+    top: 2vw;
+    font-size: 2vw;
+    transition: 0.2s;
+}
+
+#exitIcon:hover {
+    color: #ff7373;
 }
 
 @media only screen and (max-width: 800px) {

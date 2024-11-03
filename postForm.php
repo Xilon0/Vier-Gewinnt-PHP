@@ -31,23 +31,20 @@ function sqlQuery($sql, $column, $conn) {
 }
 
 function initializeGame($conn) {
-    // Check if there's an existing game
     $gameID = sqlQuery("SELECT gameID FROM games", "gameID", $conn);
 
-    // If no game exists, create a new one
     if ($gameID === null) {
-        $emptyField = json_encode(array_fill(0, 6, array_fill(0, 7, 0))); // 6x7 grid
+        $emptyField = json_encode(array_fill(0, 7, array_fill(0, 6, 0)));
         $sql = "INSERT INTO games (player1, player2, field, currentPlayer) VALUES ('0', '0', '$emptyField', 1)";
 
         if ($conn->query($sql)) {
-            return $conn->insert_id; // Return the newly created game ID
+            return $conn->insert_id;
         } else {
             error_log("SQL Error: " . $conn->error);
             return null;
         }
     }
 
-    // Return existing game ID
     return $gameID;
 }
 
@@ -56,13 +53,8 @@ $gameID = initializeGame($conn);
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-    // Get the value from the POST request -> Wenn Noel auf Start Game drückt wird ein Post
-    // Request gesendet mit dem Username
-    $usernameFrontend = $_POST['username'];
 
-    // BENUTZERNAME wird PER GET REQUEST ÜBERGEBEN und dann in die db geschrieben
-    // rückgabe der gameid wenn ein spieler definiert ist, wenn volll dann false zurückgeben
+    $usernameFrontend = $_POST['username'];
 
     $result = $conn->query("select * from games where gameID = $gameID"); 
     $gamedata = $result->fetch_assoc();
@@ -70,65 +62,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $player1 = $gamedata['player1'];
     $player2 = $gamedata['player2'];
 
-    // if player1 == 0 -> spieler 1 wurde noch nicht gesetzt
     if($player1 == "0") {
         $sql = "update games set player1 = '$session_Id', username1 = '$usernameFrontend' where gameID = $gameID";
         $conn->query($sql);
 
+        $_SESSION['username'] = $usernameFrontend;
+        $_SESSION['gameID'] = $gameID;
+        $_SESSION['player'] = 1;
         $response = [
             'gameID' => $gameID
         ];
-    
-        // Set the content type to application/json
+
         header('Content-Type: application/json');
-    
-        // Send the JSON response back to the frontend
+  
         echo json_encode($response);
 
-    } else { // sonst wird in db player2 geschaut ob dieser frei ist 
+    } else {
         
         if($player2 == "0" && $player1 != $session_Id ) {
-        $sql = "update games set player2 = '$session_Id', username2 = '$usernameFrontend' where gameID = $gameID";
-        
-        $response = [
-            'gameID' => $gameID
-        ];
-        
-        // Set the content type to application/json
-        header('Content-Type: application/json');
-    
-        // Send the JSON response back to the frontend
-        echo json_encode($response);
-        
-        if (!$conn->query($sql)) {
-            // Log the error and return a JSON error response
-            error_log("SQL Error: " . $conn->error);
-            header('Content-Type: application/json');
-            echo json_encode(['error' => 'Database error']);
-            exit;
-        }
-        } else if($player1 == $session_Id OR $player2 == $session_Id) { 
-           
+            $sql = "update games set player2 = '$session_Id', username2 = '$usernameFrontend' where gameID = $gameID";
+            
+            $_SESSION['username'] = $usernameFrontend;
+            $_SESSION['gameID'] = $gameID;
+            $_SESSION['player'] = 2;
             $response = [
                 'gameID' => $gameID
             ];
-        
-            // Set the content type to application/json
+
             header('Content-Type: application/json');
-        
-            // Send the JSON response back to the frontend
+    
+            echo json_encode($response);
+            
+            if (!$conn->query($sql)) {
+                error_log("SQL Error: " . $conn->error);
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'Database error']);
+                exit;
+            }
+        } else if($player1 == $session_Id OR $player2 == $session_Id) { 
+           
+            $_SESSION['username'] = $usernameFrontend;
+            $_SESSION['gameID'] = $gameID;
+            $response = [
+                'gameID' => $gameID
+            ];
+
+            header('Content-Type: application/json');
+     
             echo json_encode($response);
         
             
         } else {
+
             $response = [
-                'gameID' => 'full'
+                'gameID' => 'full',
+                'gamedata' => $gamedata,
+                'playerName' => $usernameFrontend,
+                'sessionID' => $session_Id
             ];
         
-            // Set the content type to application/json
             header('Content-Type: application/json');
         
-            // Send the JSON response back to the frontend
             echo json_encode($response);
         }
 
