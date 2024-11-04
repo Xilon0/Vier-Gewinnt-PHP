@@ -49,6 +49,7 @@
             if (result.gameID != "full") {
                 joinGame(result.gameID);
             } else {
+                alert("Warte bis die laufende Sitzung beendet wurde.")
                 console.error('No gameID returned:', result);
             }
             } catch (error) {

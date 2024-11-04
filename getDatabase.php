@@ -1,6 +1,7 @@
 <?php
 
 include "dbconnect.php";
+include "wincondition.php"; // Include the wincondition.php file for the winner function
 
 session_start();
 
@@ -32,12 +33,21 @@ if ($gamedata) {
     $playerTwo = $gamedata['username2'];
     $lastTurnPlayer = $gamedata['currentPlayer'];
 
+    // Determine the winner
+    $winner = 0; // Default to no winner
+    if (winner($fieldArray, 1)) {
+        $winner = $playerOne; // Player 1 has won
+    } elseif (winner($fieldArray, 2)) {
+        $winner = $playerTwo; // Player 2 has won
+    }
+
     // Prepare the response
     $response = [
         'gameBoard' => $fieldArray,
         'playerOne' => $playerOne,
         'playerTwo' => $playerTwo,
         'lastTurnPlayer' => $lastTurnPlayer,
+        'winner' => $winner, // Add winner to the response
     ];
 
     // Debugging output (remove or comment out in production)

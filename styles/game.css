@@ -9,7 +9,7 @@
     max-width: 100%;
     max-height: 100%;
     background-color: white;
-    display: flex;
+    display: none;
     flex-direction: column;
     padding: 2vw;
     padding-left: 3vw;
@@ -23,12 +23,6 @@
     border: 3vw solid #a7a7a7;
     border-bottom: 5vw solid #a7a7a7;
     box-shadow: 0 0 10vw 3vw #00000060, 0 1vw 2vw #00000060, inset 0 0.5vw 0 0.5vw #727272, inset 0 0.5vw 3vw #000000, inset 0 -2vw 3vw -2vw #787878;
-    animation: slideInBottom 2s;
-}
-
-@keyframes slideInBottom {
-    0% { bottom: -200vh;}
-    100% { bottom: 0; }
 }
 
 .gameField {
@@ -88,7 +82,7 @@
 .player-wrapper {
     position: absolute;
     background-color: #fff;
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     width: 15vw;
@@ -100,14 +94,27 @@
     left: 0;
     border-top-right-radius: 2vw;
     border-bottom-right-radius: 2vw;
-    animation: slideInLeft 2s;
 }
 
 #player-2-wrapper {
     right: 0;
     border-top-left-radius: 2vw;
     border-bottom-left-radius: 2vw;
+}
+
+.slideInRight {
+    display: flex;
     animation: slideInRight 2s;
+}
+
+.slideInLeft {
+    display: flex;
+    animation: slideInLeft 2s;
+}
+
+.slideInBottom {
+    display: flex;
+    animation: slideInBottom 2s;
 }
 
 @keyframes slideInRight {
@@ -118,6 +125,11 @@
 @keyframes slideInLeft {
     0% { left: -200vw;}
     100% { left: 0; }
+}
+
+@keyframes slideInBottom {
+    0% { bottom: -200vh;}
+    100% { bottom: 0; }
 }
 
 .player-Bubble {
@@ -255,4 +267,79 @@
     .player-Bubble h1 {
         font-size: 5.5vw;
     }
+}
+
+#Round-End {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    background-color: #00000090;
+    width: 100%;
+    height: 100%;
+}
+
+#Round-End .end-wrapper {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 0 80px #00000090, inset 0 0 15px #00000060;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 50px;
+}
+
+#Round-End .end-wrapper h2 {
+    margin: 0;
+    margin-bottom: 20px;
+    font-size: 50px;
+    text-decoration: underline solid;
+}
+
+#Round-End .end-wrapper h1 {
+    margin: 0;
+    font-size: 35px;
+}
+
+#winner {
+    color: rgb(26, 156, 0);
+    box-shadow: inset 0 0 10px #00000050;
+}
+
+#Round-End .end-wrapper .buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+#Round-End .end-wrapper button {
+    font-size: 30px;
+    border-radius: 10px;
+    border: solid #000000 2px;
+    box-shadow: 0 0 10px #00000060, 0 2px #000000;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+#Round-End .end-wrapper button:active {
+    box-shadow: 0 0 5px #00000090, 0 1px #000000;
+    transform: translateY(1px);
+}
+
+#Round-End .end-wrapper button:hover {
+    color: #494949;
+}
+
+#Waiting {
+    font-size:calc(12px + 2.5vw);
+    text-shadow: #00000090 0 0 20px;
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 100vh;
+    background-color: #00000070;
+    color: white;
 }

@@ -20,10 +20,23 @@
         <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     </head>
     <body>
+        <h2 id="Waiting">Warten auf Spieler <i class="fa-solid fa-circle-notch fa-spin"></i></h2>
+        <div id="Round-End">
+            <div class="end-wrapper">
+                <h2>Runde vorbei</h2>
+                <h1>Gewinner:</h1>
+                <h1 id="winner">null</h1>
+                <div class="buttons">
+                    <button onclick="window.location.href='exit.php'">Hauptmenu</button>
+                    <!--<button>Neue Runde</button>-->
+                </div>
+            </div>
+        </div>
         <img src="images/background.png" id="background">
-        <div class="wrapper">
+        <div class="wrapper" id="gameWrapper">
             <div class="gameField" id="gameField"></div>
         </div>
         <div class="player-wrapper" id="player-1-wrapper">
@@ -48,6 +61,7 @@
             let player;
             let lastTurnPlayer;
             let winnner = "none";
+            let isGameFinished = false;
 
             initialize();
             
@@ -63,13 +77,26 @@
                 $.ajax({
                     url: 'getDatabase.php',
                     type: 'GET',
-                    dataType: 'json', // Specify that you're expecting JSON
-                    success: function(data) { // Directly use the parsed JSON data
+                    dataType: 'json',
+                    success: function(data) {
                         fieldArray = data.gameBoard;
                         playerOne = data.playerOne;
                         playerTwo = data.playerTwo;
                         lastTurnPlayer = data.lastTurnPlayer;
                         winner = data.winner;
+
+                        if (winner != 0) {
+                            document.getElementById("winner").textContent = winner;
+                            document.getElementById("Round-End").style.display = "flex";
+                            isGameFinished = true;
+                        }
+
+                        if (playerTwo != "") {
+                            document.getElementById("Waiting").style.display = "none";
+                            document.getElementById("player-1-wrapper").classList.add("slideInLeft");
+                            document.getElementById("player-2-wrapper").classList.add("slideInRight");
+                            document.getElementById("gameWrapper").classList.add("slideInBottom");
+                        }
                         
                         if (usernameFromSession == playerOne) {
                             document.getElementById("User-1-Name").textContent = playerOne;
@@ -79,13 +106,12 @@
                             document.getElementById("User-1-Name").textContent = playerTwo;  
                         }
 
-                        // Assuming $_SESSION['username'] is accessible via some JS variable
-                        if (playerOne === usernameFromSession) { // Use the actual variable holding session username
+                        if (playerOne === usernameFromSession) {
                             player = 0;
                         } else if (playerTwo === usernameFromSession) {
                             player = 1;
                         } else {
-                            window.location.href = "index.php"; // Correct way to redirect
+                            window.location.href = "index.php";
                         }
 
                         if ( player == 1 ) {
@@ -95,11 +121,15 @@
 
                         update();
 
-                        setTimeout(getDatabase, 2000); // Call the function, do not invoke it
+                        if (!isGameFinished) {
+                            setTimeout(getDatabase, 2000);
+                        }
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching data:', status, error);
-                        setTimeout(getDatabase, 2000); // Call the function, do not invoke it
+                        if (!isGameFinished) {
+                            setTimeout(getDatabase, 2000);
+                        }
                     }
                 });
             }
