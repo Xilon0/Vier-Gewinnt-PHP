@@ -27,7 +27,7 @@
         <div id="Round-End">
             <div class="end-wrapper">
                 <h2>Runde vorbei</h2>
-                <h1>Gewinner:</h1>
+                <h1 id="roundendheader"><i class="fa-brands fa-accessible-icon"></i> Gewinner:</h1>
                 <h1 id="winner">null</h1>
                 <div class="buttons">
                     <button onclick="window.location.href='exit.php'">Hauptmenu</button>
@@ -224,17 +224,6 @@
 
             function exitRound() {
                 window.location.href = "exit.php"
-            }
-
-            function debugField() {
-                console.log("Aktuelles Spielfeld:");
-                if (fieldArray) {
-                    fieldArray.forEach((row, rowIndex) => {
-                        console.log(`Reihe ${rowIndex}:`, row);
-                    });
-                } else {
-                    console.error("fieldArray ist nicht definiert!");
-                }
             }
 
         </script>

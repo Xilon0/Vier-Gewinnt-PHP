@@ -20,12 +20,16 @@ form {
 }
 
 input {
+    outline: none;
     border: 0.2vw solid #8026a4;
-    box-shadow: inset 0 0 0.3vw #000000ae;
+    border-left: none;
+    border-top-right-radius: 100vw;
+    border-bottom-right-radius: 100vw;
     color: #B533EA;
-    text-align: center;
+    text-align: left;
     font-size: 1.5vw;
     padding: 0.5vw;
+    padding-left: 3.5vw;
 }
 
 input:focus {
@@ -35,6 +39,14 @@ input:focus {
 
 input::placeholder {
     color: #b633ea75;
+}
+
+#user-icon {
+    position: absolute;
+    color: #8026a4;
+    left: -1.5vw;
+    font-size: 4vw;
+    align-self: center;
 }
 
 button {

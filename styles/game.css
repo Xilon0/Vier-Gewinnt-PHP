@@ -183,7 +183,7 @@
     color: #ff7373;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 650px) {
     .selectable {
         width: 5vw;
     }
@@ -305,6 +305,7 @@
 #winner {
     color: rgb(26, 156, 0);
     box-shadow: inset 0 0 10px #00000050;
+    border-radius: 10px;
 }
 
 #Round-End .end-wrapper .buttons {
@@ -320,6 +321,9 @@
     box-shadow: 0 0 10px #00000060, 0 2px #000000;
     cursor: pointer;
     transition: 0.1s;
+    padding: 5px;
+    padding-left: 9px;
+    padding-right: 9px;
 }
 
 #Round-End .end-wrapper button:active {
