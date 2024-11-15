@@ -1,7 +1,7 @@
 <?php
-$servername = "localhost"; // MySQL server (localhost)
-$username = "root";        // MySQL username (root)
-$password = "";            // No password for root by default in XAMPP
+$servername = "192.168.242.251"; // MySQL server (localhost)
+$username = "dbuser";        // MySQL username (root)
+$password = "dbuser";            // No password for root by default in XAMPP
 $database = "vier_gewinnt"; // The database we created
 
 // Create connection (note the new port 3307)

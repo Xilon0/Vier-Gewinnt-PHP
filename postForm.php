@@ -34,7 +34,7 @@ function initializeGame($conn) {
     $gameID = sqlQuery("SELECT gameID FROM games", "gameID", $conn);
 
     if ($gameID === null) {
-        $emptyField = json_encode(array_fill(0, 7, array_fill(0, 6, 0)));
+        $emptyField = json_encode(array_fill(0, 6, array_fill(0, 7, 0)));
         $sql = "INSERT INTO games (player1, player2, field, currentPlayer) VALUES ('0', '0', '$emptyField', 1)";
 
         if ($conn->query($sql)) {

@@ -226,6 +226,17 @@
                 window.location.href = "exit.php"
             }
 
+            function debugField() {
+                console.log("Aktuelles Spielfeld:");
+                if (fieldArray) {
+                    fieldArray.forEach((row, rowIndex) => {
+                        console.log(`Reihe ${rowIndex}:`, row);
+                    });
+                } else {
+                    console.error("fieldArray ist nicht definiert!");
+                }
+            }
+
         </script>
     </body>
 </html>
