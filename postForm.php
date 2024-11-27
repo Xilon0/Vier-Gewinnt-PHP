@@ -4,15 +4,6 @@ include "dbconnect.php";
 
 session_start();
 
-//game id muss in sql gesetzt, ist der primärschlussel
-//und db wird nach jedem game gelöscht
-
-// cleart die datenbank; NUR ZUM TESTEN DANACH MUSS RAUS
-//$sql = "delete from games";
-//$conn->query($sql); 
-
-// prüfen ob es bereits ein game gibt oder eins erstellt werden muss
-
 function sqlQuery($sql, $column, $conn) {
     $result = $conn->query($sql);
     
