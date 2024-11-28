@@ -106,12 +106,12 @@
                             document.getElementById("User-1-Name").textContent = playerTwo;  
                         }
 
-                        if (playerOne === usernameFromSession) {
+                        if (playerOne == usernameFromSession) {
                             player = 0;
-                        } else if (playerTwo === usernameFromSession) {
+                        } else if (playerTwo == usernameFromSession) {
                             player = 1;
                         } else {
-                            window.location.href = "index.php";
+                            window.location.href = "exit.php";
                         }
 
                         if ( player == 1 ) {

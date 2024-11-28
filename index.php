@@ -27,11 +27,12 @@
     </head>
     <body>
         <img src="images/background.png" id="background">
+        <i class="fa-brands fa-youtube" id="youtube" onclick="window.location.href='https:/\/youtube.com/watch?v=3pGzzgkYY8U'"></i>
 
         <form id="form">
             <p id="title">VIER GEWINNT</p>
             <div style="position:relative;display:flex">
-                <input type="text" id="username" name="username" placeholder="Name" required>
+                <input type="text" id="username" name="username" placeholder="Name" maxlength="255" required>
                 <i class="fa-solid fa-face-frown" id="user-icon"></i>
             </div>
             <button type="submit">Beitreten</button>
