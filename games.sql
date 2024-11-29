@@ -29,13 +29,14 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `games` (
-  `gameID` int(11) NOT NULL,
+  `gameID` int(11) NOT NULL AUTO_INCREMENT,
   `player1` varchar(255) NOT NULL,
   `player2` varchar(255) NOT NULL,
   `field` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `currentPlayer` int(11) NOT NULL,
   `username1` varchar(255) NOT NULL,
-  `username2` varchar(255) NOT NULL
+  `username2` varchar(255) NOT NULL,
+  PRIMARY KEY(`gameID`)
 ) ;
 COMMIT;
 
