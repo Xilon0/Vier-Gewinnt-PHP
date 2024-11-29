@@ -62,7 +62,8 @@
             let lastTurnPlayer;
             let winnner = "none";
             let isGameFinished = false;
-
+            let currentAjaxRequest = null;
+            
             initialize();
             
 
@@ -74,7 +75,15 @@
                 player = 0;
                 let usernameFromSession = "<?php echo $_SESSION['username'] ?>";
 
-                $.ajax({
+                if (isGameFinished) {
+                    return;
+                }
+
+                if (currentAjaxRequest) {
+                    currentAjaxRequest.abort();
+                }
+
+                currentAjaxRequest = $.ajax({
                     url: 'getDatabase.php',
                     type: 'GET',
                     dataType: 'json',
@@ -88,6 +97,9 @@
                         if (winner != 0) {
                             document.getElementById("winner").textContent = winner;
                             document.getElementById("Round-End").style.display = "flex";
+                            if (document.getElementById("winner").textContent == null || document.getElementById("winner").textContent == "" || document.getElementById("winner").textContent == "null") {
+                                document.getElementById("winner").textContent = usernameFromSession;
+                            }
                             isGameFinished = true;
                         }
 
@@ -110,8 +122,6 @@
                             player = 0;
                         } else if (playerTwo == usernameFromSession) {
                             player = 1;
-                        } else {
-                            window.location.href = "exit.php";
                         }
 
                         if ( player == 1 ) {
